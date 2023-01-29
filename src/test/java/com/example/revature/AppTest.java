@@ -2,6 +2,8 @@ package com.example.revature;
 
 import org.junit.jupiter.api.Test;
 
+import com.example.revature.model.Employee;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -13,6 +15,6 @@ class AppTest {
      */
     @Test
     void testApp() {
-        assertEquals(1, 1);
+       
     }
 }
