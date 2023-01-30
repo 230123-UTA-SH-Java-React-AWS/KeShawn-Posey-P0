@@ -1,10 +1,11 @@
 package com.example.revature;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.revature.model.Employee;
-
+import com.example.revature.controllers.*;
+import java.net.InetSocketAddress;
+import com.sun.net.httpserver.HttpServer;
 
 /**
  * Keshawn Posey
@@ -12,7 +13,7 @@ import com.example.revature.model.Employee;
  * Allow associates to develop features in a self guided evironment
  */
 public final class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         
         Employee Bob = new Employee("bobisclutch@gmail.com", "bobisnumber1!");
         Employee Amy = new Employee("bobisclutch@gmail.com", "bobisnumber1!");
@@ -25,6 +26,13 @@ public final class App {
         List<Employee> employs = new ArrayList<Employee>();
         employs.add(Bob);
         
-        System.out.println("Hello World!");
+        System.out.println("Starting backend server...");
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+
+        server.createContext("/employee13", new EmployeeController());
+
+        server.setExecutor(null);
+        server.start();
     }
 }
