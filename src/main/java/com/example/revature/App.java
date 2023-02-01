@@ -3,6 +3,7 @@ package com.example.revature;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.revature.model.Employee;
+import com.example.revature.repository.EmployeeRepository;
 import com.example.revature.controllers.*;
 import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpServer;
@@ -42,5 +43,10 @@ public final class App {
         // System.out.println(System.getenv("url"));
 
         // ConnectionUtil.getConnection();
+
+    //     EmployeeRepository repo = new EmployeeRepository();
+    //     List<Employee> currentList = repo.getAllEmployee();
+
+    //     System.out.println(currentList.toString());
     }
 }

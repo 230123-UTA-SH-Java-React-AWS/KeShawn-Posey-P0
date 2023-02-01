@@ -21,6 +21,9 @@ public class EmployeeController implements HttpHandler{
         String verb = exchange.getRequestMethod();
 
         switch (verb){
+            case "GET":
+                getRequest(exchange);
+                break;
             case "POST":
                 postRequest(exchange);
                 break;
@@ -28,6 +31,17 @@ public class EmployeeController implements HttpHandler{
                 break;
         }
         
+    }
+
+    private void getRequest(HttpExchange exchange) throws IOException {
+        EmployeeService serv = new EmployeeService();
+        String jsonCurrentList = serv.getAllEmployee();
+
+        exchange.sendResponseHeaders(200, jsonCurrentList.getBytes().length);
+
+        OutputStream os = exchange.getResponseBody();
+        os.write(jsonCurrentList.getBytes());
+        os.close();
     }
 
     private void postRequest(HttpExchange exchange) throws IOException{

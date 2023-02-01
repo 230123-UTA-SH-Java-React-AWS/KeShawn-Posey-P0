@@ -7,13 +7,20 @@ public class Employee {
     //Set them as char to receive symbols, numbers and alphabet within email and password
     private static String email; 
     private static String pass;
-    
+
     public Employee(String email, String pass) {
         this.email = email;
         this.pass = pass;
     }
+    
     public Employee(){
         
+    }
+
+    
+    @Override
+    public String toString() {
+        return "Employee [email=" + email + ", password=" + pass + "]";
     }
 
     // private List<Register> registeration;
