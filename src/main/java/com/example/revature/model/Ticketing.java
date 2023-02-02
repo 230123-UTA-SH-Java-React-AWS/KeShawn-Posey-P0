@@ -6,34 +6,38 @@ public class Ticketing {
     private enum TicStatus {
         APPROVED, DENIED, PENDING
     };
-
-    private String amount;
+    
+    private double amount;
     private String description;
     private TicStatus status = TicStatus.PENDING;
+    
+    
+    
+    public TicStatus getStatus() {
+        return status;
+    }
 
-
-
-    public Ticketing(String amount, String description) {
+    public Ticketing(Double amount, String description) {
         this.amount = amount;
         this.description = description;
     }
-
-    public String getAmount() {
+    
+    public Double getAmount() {
         return amount;
     }
-
-    public void setAmount(String amount) {
+    
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
-
+    
     public String getDescription() {
         return description;
     }
-
+    
     public void setDescription(String description) {
         this.description = description;
     }
-
+    
     public void setStatus(TicStatus status) {
         if (this.status != TicStatus.PENDING) {
             return;
@@ -41,4 +45,9 @@ public class Ticketing {
             this.status = status;
         }
     }
+    
+        @Override
+        public String toString() {
+            return "Ticketing [amount=$" + amount + ", description=" + description + ", status=" + status + "]";
+        }
 }

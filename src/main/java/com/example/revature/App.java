@@ -3,6 +3,8 @@ package com.example.revature;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.revature.model.Employee;
+import com.example.revature.model.Manager;
+import com.example.revature.model.Ticketing;
 import com.example.revature.repository.EmployeeRepository;
 import com.example.revature.controllers.*;
 import java.net.InetSocketAddress;
@@ -17,17 +19,16 @@ import utils.ConnectionUtil;
  */
 public final class App {
     public static void main(String[] args) throws Exception {
-        
-        // Employee Bob = new Employee("bobisclutch@gmail.com", "bobisnumber1!");
-        // Employee Amy = new Employee("bobisclutch@gmail.com", "bobisnumber1!");
-        // Amy.setEmail("bobisclutch@gmail.com");
-        // Amy.setPassword("amyisnumber1!");
-        
-        // System.out.println(Bob.getEmail());
-        // System.out.println(Amy.getPassword());
-
-        // List<Employee> employs = new ArrayList<Employee>();
-        // employs.add(Bob);
+        // ArrayList<Ticketing> k = new ArrayList<Ticketing>();
+        // Employee John = new Employee("john@gmail.com", "john234", k);
+        // Manager Michael = new Manager("michael@gmail.com", "michael234", k);
+        // Ticketing newTicket = new Ticketing(500.00, "medical bill");
+        // John.addTicket(newTicket);
+        // String str = "APPROVED";
+        // Michael.printTickets();
+        // System.out.println(John);
+        // John.printTickets();
+       
         
         System.out.println("Starting backend server...");
 

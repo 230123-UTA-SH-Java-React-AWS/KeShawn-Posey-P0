@@ -59,8 +59,8 @@ public class EmployeeRepository {
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
 
-            prstmt.setString(1, Employee.getEmail());
-            prstmt.setString(2, Employee.getPassword());
+            prstmt.setString(1, employ.getEmail());
+            prstmt.setString(2, employ.getPassword());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
