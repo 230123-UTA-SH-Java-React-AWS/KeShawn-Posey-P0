@@ -12,6 +12,10 @@ public class Manager extends Employee {
         super(email, password, tickets);
     }
     
+    
+    public Manager(){
+        
+    }
 
         public void ProcessTick(){
             

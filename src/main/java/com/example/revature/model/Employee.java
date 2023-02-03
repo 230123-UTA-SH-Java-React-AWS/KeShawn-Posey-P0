@@ -15,6 +15,14 @@ public class Employee {
         this.tickets = tickets;
     }
     
+    public void setTickets(ArrayList<Ticketing> tickets) {
+        this.tickets = tickets;
+    }
+
+    public ArrayList<Ticketing> getTickets() {
+        return tickets;
+    }
+
     public Employee(){
         
     }

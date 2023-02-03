@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.xml.transform.Result;
 
-import com.example.revature.model.Employee;
+import com.example.revature.model.Manager;
 
 import utils.ConnectionUtil;
 
@@ -20,9 +20,9 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class EmployeeRepository {
-
-    public void Save(Employee employ) {
+public class ManagerRepository {
+    
+    public void Save(Manager man) {
 
         // -------------- Save to json file ----------------
 
@@ -54,13 +54,13 @@ public class EmployeeRepository {
         // }
 
         // -------------- Save to database ------------
-        String sql = "insert into employee (email, pass) values (?,?)";
+        String sql = "insert into manager (email, pass) values (?,?)";
 
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
 
-            prstmt.setString(1, employ.getEmail());
-            prstmt.setString(2, employ.getPassword());
+            prstmt.setString(1, man.getEmail());
+            prstmt.setString(2, man.getPassword());
             // prstmt.setArray(3, employ.getTickets());
 
             // excute is updating'
@@ -73,9 +73,9 @@ public class EmployeeRepository {
         }
     }
 
-    public List<Employee> getAllEmployee() {
-        String sql = "select * from employee";
-        List<Employee> listOfEmployee = new ArrayList<Employee>();
+    public List<Manager> getAllManager() {
+        String sql = "select * from Manager";
+        List<Manager> listOfManager = new ArrayList<Manager>();
 
         try (Connection con = ConnectionUtil.getConnection()) {
 
@@ -85,13 +85,13 @@ public class EmployeeRepository {
 
             // Mapping information from a table to a DS instead
             while (rs.next()) {
-                Employee newEmployee = new Employee();
+                Manager newManager = new Manager();
 
-                newEmployee.setEmail(rs.getString(1));
-                newEmployee.setPassword(rs.getString(2));
+                newManager.setEmail(rs.getString(1));
+                newManager.setPassword(rs.getString(2));
                 // newEmployee.setTickets(rs.getString(3));;
 
-                listOfEmployee.add(newEmployee);
+                listOfManager.add(newManager);
             }
 
         } catch (Exception e) {
@@ -99,6 +99,6 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
 
-        return listOfEmployee;
+        return listOfManager;
     }
 }
