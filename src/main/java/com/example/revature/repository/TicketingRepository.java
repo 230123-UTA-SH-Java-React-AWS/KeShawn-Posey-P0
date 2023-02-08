@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.xml.transform.Result;
 
-import com.example.revature.model.Employee;
+import com.example.revature.model.Ticketing;
 
 import utils.ConnectionUtil;
 
@@ -20,9 +20,8 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class EmployeeRepository {
-
-    public void Save(Employee employ) {
+public class TicketingRepository {
+    public void Save(Ticketing tick) {
 
         // -------------- Save to json file ----------------
 
@@ -54,14 +53,14 @@ public class EmployeeRepository {
         // }
 
         // -------------- Save to database ------------
-        String sql = "insert into employee (email, pass, tickets) values (?,?,?)";
+        String sql = "insert into ticketing (amount, description, status) values (?,?,?)";
 
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
 
-            prstmt.setString(1, employ.getEmail());
-            prstmt.setString(2, employ.getPassword());
-            prstmt.setString(3, employ.getTickets());
+            prstmt.setDouble(1, tick.getAmount());
+            prstmt.setString(2, tick.getDescription());
+            prstmt.setString(3, tick.getStatus());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
@@ -73,9 +72,9 @@ public class EmployeeRepository {
         }
     }
 
-    public List<Employee> getAllEmployee() {
-        String sql = "select * from employee";
-        List<Employee> listOfEmployee = new ArrayList<Employee>();
+    public List<Ticketing> getAllTicketing() {
+        String sql = "select * from ticketing";
+        List<Ticketing> listOfTicketing = new ArrayList<Ticketing>();
 
         try (Connection con = ConnectionUtil.getConnection()) {
 
@@ -85,13 +84,13 @@ public class EmployeeRepository {
 
             // Mapping information from a table to a DS instead
             while (rs.next()) {
-                Employee newEmployee = new Employee();
+                Ticketing newTicketing = new Ticketing();
 
-                newEmployee.setEmail(rs.getString(1));
-                newEmployee.setPassword(rs.getString(2));
-                newEmployee.setTickets(rs.getString(3));;
+                newTicketing.setAmount(rs.getDouble(1));
+                newTicketing.setDescription(rs.getString(2));
+                newTicketing.setStatus(rs.getString(3));
 
-                listOfEmployee.add(newEmployee);
+                listOfTicketing.add(newTicketing);
             }
 
         } catch (Exception e) {
@@ -99,6 +98,6 @@ public class EmployeeRepository {
             e.printStackTrace();
         }
 
-        return listOfEmployee;
+        return listOfTicketing;
     }
 }

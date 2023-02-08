@@ -8,7 +8,7 @@ public class Manager extends Employee {
     
     private enum process{APPROVED, DENIED, PENDING}
 
-    public Manager(String email, String password,  ArrayList<Ticketing> tickets) {
+    public Manager(String email, String password,  String tickets, boolean manager) {
         super(email, password, tickets);
     }
     

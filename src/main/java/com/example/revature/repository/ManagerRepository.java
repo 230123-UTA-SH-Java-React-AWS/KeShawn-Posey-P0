@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.xml.transform.Result;
 
+import com.example.revature.model.Employee;
 import com.example.revature.model.Manager;
 
 import utils.ConnectionUtil;
@@ -54,14 +55,14 @@ public class ManagerRepository {
         // }
 
         // -------------- Save to database ------------
-        String sql = "insert into manager (email, pass) values (?,?)";
+        String sql = "insert into manager (email, pass, tickets) values (?,?,?)";
 
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
 
             prstmt.setString(1, man.getEmail());
             prstmt.setString(2, man.getPassword());
-            // prstmt.setArray(3, employ.getTickets());
+            prstmt.setString(3, man.getTickets());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
@@ -89,7 +90,7 @@ public class ManagerRepository {
 
                 newManager.setEmail(rs.getString(1));
                 newManager.setPassword(rs.getString(2));
-                // newEmployee.setTickets(rs.getString(3));;
+                newManager.setTickets(rs.getString(3));
 
                 listOfManager.add(newManager);
             }
@@ -101,4 +102,28 @@ public class ManagerRepository {
 
         return listOfManager;
     }
+
+    public void update(Manager to){
+        String sql = "update employee set '?' = '?' where '?' = '?'";
+
+        try (Connection con = ConnectionUtil.getConnection()) {
+            PreparedStatement prstmt = con.prepareStatement(sql);
+
+            // prstmt.setString(1, to.getEmail());
+            // prstmt.setString(2, to.getPassword());
+            // prstmt.setString(3, to.getTickets());
+
+            prstmt.setString(1, to.getTickets());
+            prstmt.setString(1, to.getTickets());
+
+            // excute is updating'
+            // excutequery expect something to result after excuting the statement
+
+            prstmt.executeUpdate();
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+    }
 }
+

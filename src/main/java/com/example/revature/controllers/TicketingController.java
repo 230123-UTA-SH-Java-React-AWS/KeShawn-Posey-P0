@@ -12,7 +12,7 @@ import com.example.revature.service.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class ManagerController implements HttpHandler{
+public class TicketingController implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         // TODO Auto-generated method stub
@@ -26,9 +26,6 @@ public class ManagerController implements HttpHandler{
             case "POST":
                 postRequest(exchange);
                 break;
-            case "ALTER":
-                alterRequest(exchange);
-                break;
             default:
                 break;
         }
@@ -36,8 +33,8 @@ public class ManagerController implements HttpHandler{
     }
 
     private void getRequest(HttpExchange exchange) throws IOException {
-        ManagerService serv = new ManagerService();
-        String jsonCurrentList = serv.getAllManager();
+        TicketingService serv = new TicketingService();
+        String jsonCurrentList = serv.getAllTicketing();
 
         exchange.sendResponseHeaders(200, jsonCurrentList.getBytes().length);
 
@@ -61,35 +58,11 @@ public class ManagerController implements HttpHandler{
         }
         exchange.sendResponseHeaders(200, textBuilder.toString().getBytes().length);
     
-        ManagerService manService = new ManagerService();
-        manService.saveToManBox(textBuilder.toString());
+        TicketingService tickService = new TicketingService();
+        tickService.saveToTickBox(textBuilder.toString());
     
         OutputStream os = exchange.getResponseBody();
         os.write(textBuilder.toString().getBytes());
         os.close();
     }
-
-    private void alterRequest(HttpExchange exchange) throws IOException{
-
-        InputStream is = exchange.getRequestBody();
-
-        StringBuilder textBuilder = new StringBuilder();
-
-        try (Reader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))){
-            int k = 0;
-
-            while ((k = reader.read()) != -1){
-                textBuilder.append((char)k);
-            }
-        }
-        exchange.sendResponseHeaders(200, textBuilder.toString().getBytes().length);
-    
-        ManagerService manService = new ManagerService();
-        manService.alterticket(textBuilder.toString());
-    
-        OutputStream os = exchange.getResponseBody();
-        os.write(textBuilder.toString().getBytes());
-        os.close();
-    }
-
 }

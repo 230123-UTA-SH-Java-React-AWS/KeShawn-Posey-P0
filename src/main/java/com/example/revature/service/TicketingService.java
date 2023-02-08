@@ -11,17 +11,17 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class ManagerService {
-    public void saveToManBox(String ManJson) {
+public class TicketingService {
+    public void saveToTickBox(String TickJson) {
         
-        ManagerRepository repo = new ManagerRepository();
+        TicketingRepository repo = new TicketingRepository();
         //Conversion from string to pokemon obj here?
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            Manager newManager = mapper.readValue(ManJson, Manager.class);
+            Ticketing newTicketing = mapper.readValue(TickJson, Ticketing.class);
 
-            repo.Save(newManager);
+            repo.Save(newTicketing);
 
         } catch (JsonParseException e) {
             // TODO Auto-generated catch block
@@ -35,16 +35,16 @@ public class ManagerService {
         }
     }
 
-    public String getAllManager(){
-        ManagerRepository repo = new ManagerRepository();
-        List<Manager> listOfManagers = repo.getAllManager();
+    public String getAllTicketing(){
+        TicketingRepository repo = new TicketingRepository();
+        List<Ticketing> listOfTicketings = repo.getAllTicketing();
 
         ObjectMapper map = new ObjectMapper();
 
         String jsonString = "";
 
         try {
-            jsonString = map.writeValueAsString(listOfManagers);
+            jsonString = map.writeValueAsString(listOfTicketings);
 
         } catch (JsonGenerationException e) {
             // TODO Auto-generated catch block
@@ -59,27 +59,5 @@ public class ManagerService {
 
         return jsonString;
  
-    }
-    public void alterticket(String ManJson) {
-        
-        ManagerRepository repo = new ManagerRepository();
-        //Conversion from string to pokemon obj here?
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            Manager newManager = mapper.readValue(ManJson, Manager.class);
-
-            repo.update(newManager);
-
-        } catch (JsonParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 }
