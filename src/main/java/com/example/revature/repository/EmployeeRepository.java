@@ -13,6 +13,7 @@ import java.util.List;
 import javax.xml.transform.Result;
 
 import com.example.revature.model.Employee;
+import com.example.revature.model.Ticketing;
 
 import utils.ConnectionUtil;
 
@@ -54,14 +55,15 @@ public class EmployeeRepository {
         // }
 
         // -------------- Save to database ------------
-        String sql = "insert into employee (email, pass, tickets) values (?,?,?)";
+        String sql = "insert into employee (employeeId, email, pass, roles) values (?,?,?,?)";
 
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
 
-            prstmt.setString(1, employ.getEmail());
-            prstmt.setString(2, employ.getPassword());
-            prstmt.setString(3, employ.getTickets());
+            prstmt.setInt(1, employ.getId());
+            prstmt.setString(2, employ.getEmail());
+            prstmt.setString(3, employ.getPassword());
+            prstmt.setString(4, employ.getRole());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
@@ -87,9 +89,10 @@ public class EmployeeRepository {
             while (rs.next()) {
                 Employee newEmployee = new Employee();
 
-                newEmployee.setEmail(rs.getString(1));
-                newEmployee.setPassword(rs.getString(2));
-                newEmployee.setTickets(rs.getString(3));;
+                newEmployee.setId(rs.getInt(1));
+                newEmployee.setEmail(rs.getString(2));
+                newEmployee.setPassword(rs.getString(3));
+                newEmployee.setRole(rs.getString(4));
 
                 listOfEmployee.add(newEmployee);
             }
@@ -100,5 +103,81 @@ public class EmployeeRepository {
         }
 
         return listOfEmployee;
+    }
+
+    public List<Ticketing> getTickets (String email)
+    {
+        String sql = "select * from ticketing where email = ?";
+        List<Ticketing> allTickets = new ArrayList<Ticketing>();
+        try (Connection con = ConnectionUtil.getConnection()) {
+            PreparedStatement prstmt = con.prepareStatement(sql);
+            prstmt.setString(1, email);
+            ResultSet rs = prstmt.executeQuery();
+            while (rs.next()){
+                Ticketing Ticket = new Ticketing();
+                Ticket.setEmail(rs.getString("email"));
+                Ticket.setAmount(rs.getDouble("amount"));
+                Ticket.setDescription(rs.getString("description"));
+                Ticket.setStatus(rs.getString("status"));
+                allTickets.add(Ticket);
+            }
+            rs.close();
+            prstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return allTickets;
+    }
+
+    public List<Ticketing> getFilterTickets (String email, String filter) {
+        String sql = "select * from ticketing where email = ? and status = ?";
+        List<Ticketing> allTickets = new ArrayList<Ticketing>();
+        try (Connection con = ConnectionUtil.getConnection()) {
+            PreparedStatement prstmt = con.prepareStatement(sql);
+            prstmt.setString(1, email);
+            prstmt.setString(2, filter);
+            ResultSet rs = prstmt.executeQuery();
+            while (rs.next()){
+                Ticketing Ticket = new Ticketing();
+                Ticket.setEmail(rs.getString("email"));
+                Ticket.setAmount(rs.getDouble("amount"));
+                Ticket.setDescription(rs.getString("description"));
+                Ticket.setStatus(rs.getString("status"));
+                allTickets.add(Ticket);
+            }
+            rs.close();
+            prstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return allTickets;
+    }
+    public Employee loginEmployee(Employee employee) {
+        String sql = "select * from employee where email = ?";
+        Employee Current = new Employee();
+        try (Connection con = ConnectionUtil.getConnection()) {
+            PreparedStatement prstmt = con.prepareStatement(sql);
+            prstmt.setString(1, employee.getEmail());
+            ResultSet rs = prstmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("Employee does not exist!");
+                return null;
+            }   // check if the password is correct
+            else if (employee.getPassword().equals(rs.getString(2))) {
+                Current.setId(rs.getInt("employeeId"));
+                Current.setEmail(rs.getString("email"));
+                Current.setPassword(rs.getString("pass"));
+                Current.setRole(rs.getString("roles"));
+                Current.setTickets(getTickets(Current.getEmail()));
+            } else {
+                System.out.println("Wrong Password!");
+                return null;
+            }
+            rs.close();
+            prstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Current;
     }
 }

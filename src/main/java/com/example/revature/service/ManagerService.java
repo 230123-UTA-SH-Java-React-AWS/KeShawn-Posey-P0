@@ -60,26 +60,10 @@ public class ManagerService {
         return jsonString;
  
     }
-    public void alterticket(String ManJson) {
-        
+    
+    public Manager getCurrentManager(Manager current) {
         ManagerRepository repo = new ManagerRepository();
-        //Conversion from string to pokemon obj here?
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            Manager newManager = mapper.readValue(ManJson, Manager.class);
-
-            repo.update(newManager);
-
-        } catch (JsonParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Manager currentManager = repo.loginManager(current);
+        return currentManager;
     }
 }

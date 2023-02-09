@@ -1,6 +1,7 @@
 package com.example.revature.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.revature.repository.*;
@@ -59,5 +60,17 @@ public class EmployeeService {
 
         return jsonString;
  
+    }
+    public Employee getCurrentEmployee (Employee current) {
+        EmployeeRepository repo = new EmployeeRepository();
+        Employee currentEmployee = repo.loginEmployee(current);
+        return currentEmployee;
+    }
+
+    public List<Ticketing> filterTickets (String userEmail, String filter){
+        EmployeeRepository repo = new EmployeeRepository();
+        List<Ticketing> allTickets = new ArrayList<Ticketing>();
+        allTickets = repo.getFilterTickets(userEmail, filter);
+        return allTickets;
     }
 }

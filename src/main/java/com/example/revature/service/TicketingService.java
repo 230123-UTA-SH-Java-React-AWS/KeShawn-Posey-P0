@@ -60,4 +60,16 @@ public class TicketingService {
         return jsonString;
  
     }
+    public Ticketing updateTickets(String manEmail, String manPassword, String ticketID, String status){
+        TicketingRepository repo = new TicketingRepository();
+        Ticketing processedTicket = new Ticketing();
+        boolean manValidation = repo.validateManager(manEmail,manPassword);
+        if (manValidation == true) {    // Check if Manager exist and password is correct
+            processedTicket = repo.processTickets(ticketID, status);
+            System.out.println("Ticket Processed");
+        } else {
+            System.out.println("Unable to process ticket");
+        }
+        return processedTicket;
+    }
 }

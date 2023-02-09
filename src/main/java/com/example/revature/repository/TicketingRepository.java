@@ -53,14 +53,17 @@ public class TicketingRepository {
         // }
 
         // -------------- Save to database ------------
-        String sql = "insert into ticketing (amount, description, status) values (?,?,?)";
+        String sql = "insert into ticketing (ticketID, email, pass, amount, description, status) values (?,?,?,?,?,?)";
 
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
 
-            prstmt.setDouble(1, tick.getAmount());
-            prstmt.setString(2, tick.getDescription());
-            prstmt.setString(3, tick.getStatus());
+            prstmt.setInt(1, tick.getTicketId());
+            prstmt.setString(2, tick.getEmail());
+            //prstmt.setString(3, tick.getPassword());
+            prstmt.setDouble(3, tick.getAmount());
+            prstmt.setString(4, tick.getDescription());
+            prstmt.setString(5, tick.getStatus());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
@@ -73,7 +76,7 @@ public class TicketingRepository {
     }
 
     public List<Ticketing> getAllTicketing() {
-        String sql = "select * from ticketing";
+        String sql = "select * from ticketing where status = 'PENDING'";
         List<Ticketing> listOfTicketing = new ArrayList<Ticketing>();
 
         try (Connection con = ConnectionUtil.getConnection()) {
@@ -86,9 +89,11 @@ public class TicketingRepository {
             while (rs.next()) {
                 Ticketing newTicketing = new Ticketing();
 
-                newTicketing.setAmount(rs.getDouble(1));
-                newTicketing.setDescription(rs.getString(2));
-                newTicketing.setStatus(rs.getString(3));
+                newTicketing.setTicketId(rs.getInt(1));
+                newTicketing.setEmail(rs.getString(2));
+                newTicketing.setAmount(rs.getDouble(3));
+                newTicketing.setDescription(rs.getString(4));
+                newTicketing.setStatus(rs.getString(5));
 
                 listOfTicketing.add(newTicketing);
             }
@@ -100,4 +105,78 @@ public class TicketingRepository {
 
         return listOfTicketing;
     }
+
+    public Ticketing processTickets(String ticketID, String status){
+        Ticketing processedTicket = new Ticketing();
+        String sql = "update ticketing set status = ? where ticketID = ?";
+            try (Connection con = ConnectionUtil.getConnection()) {
+                PreparedStatement prstmt = con.prepareStatement(sql);
+                prstmt.setString(1, status);
+                prstmt.setString(2, ticketID);
+                ResultSet rs = prstmt.executeQuery();
+                rs.close();
+                prstmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        processedTicket = findTicket(ticketID);
+        return processedTicket;
+    }
+
+    public boolean validateManager(String manEmail, String manPassword) {
+        boolean isManager = false;
+        String sql = "select * from employee where email = ?";
+        try (Connection con = ConnectionUtil.getConnection()) {
+            PreparedStatement prstmt = con.prepareStatement(sql);
+            prstmt.setString(1, manEmail);
+            ResultSet rs = prstmt.executeQuery();
+            if (!rs.next()) {
+                isManager = false;
+            }
+            else if (manPassword.equals(rs.getString(2))) {
+                isManager = true;
+            }
+            rs.close();
+            prstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isManager;
+    }
+
+    private Ticketing findTicket(String ticketID) {
+        Ticketing Ticket = new Ticketing();
+        String sql = "select * from ticketing where ticketID = ?";
+        try (Connection con = ConnectionUtil.getConnection()) {
+            PreparedStatement prstmt = con.prepareStatement(sql);
+            prstmt.setString(1, ticketID);
+            ResultSet rs = prstmt.executeQuery();
+            if (!rs.next()) {
+                return null;
+            } else {
+                Ticket.setTicketId(rs.getInt(1));
+                Ticket.setEmail(rs.getString(2));
+                Ticket.setAmount(rs.getDouble(3));
+                Ticket.setDescription(rs.getString(4));
+                Ticket.setStatus(rs.getString(5));
+            }
+            rs.close();
+            prstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Ticket;
+    }
+
+    // private boolean isProcessed(String ticketID){
+    //     boolean ticketIsProcessed = false;
+    //     Ticketing Ticket = findTicket(ticketID);
+    //     if (Ticket.isProcessed() == false) {
+    //         ticketIsProcessed = false;
+    //     } else {
+    //         ticketIsProcessed = true;
+    //         System.out.println("Ticket has already been processed");
+    //     }
+    //     return ticketIsProcessed;
+    // }
 }

@@ -2,19 +2,21 @@ package com.example.revature.model;
 
 public class Ticketing {
 
-    //enum to have a special class of constants to give the status of the tickets
-    // private enum TicStatus {
-    //     APPROVED, DENIED, PENDING
-    // };
-    
+    private String email;
+    private String password;
+    private int ticketId;
     private double amount;
     private String description;
     private String status;
+    protected final String[] validation = {"PENDING", "APPROVED", "DENIED"};
     
-    public Ticketing(Double amount, String description, String status) {
+    public Ticketing(String email, String password, int ticketId, Double amount, String description, String status) {
+        this.email = email;
+        this.password = password;
+        this.ticketId = ticketId;
         this.amount = amount;
         this.description = description;
-        this.status = status;
+        this.status = validation[0];
     }
 
     public Ticketing(){
@@ -45,17 +47,36 @@ public class Ticketing {
         this.status = status;
     }
     
+        public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(int ticketId) {
+        this.ticketId = ticketId;
+    }
     
-    // public void setStatus(TicStatus status) {
-    //     if (this.status != TicStatus.PENDING) {
-    //         return;
-    //     } else{ 
-    //         this.status = status;
-    //     }
-    // }
-    
-        @Override
-        public String toString() {
-            return "Ticketing [amount=$" + amount + ", description=" + description + ", status=" + status + "]";
-        }
+
+        public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticketing [ticketId=" + ticketId + ",email=" + email + ", password=" + password + ", amount=" + amount
+                + ", description=" + description + ", status=" + status + "]";
+    }
+
+       
 }

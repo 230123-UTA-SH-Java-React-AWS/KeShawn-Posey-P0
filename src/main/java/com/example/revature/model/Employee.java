@@ -5,29 +5,34 @@ import java.util.List;
 
 public class Employee {
     //Set them as char to receive symbols, numbers and alphabet within email and password
+    private int id;
     private String email; 
     private String pass;
-    private String tickets;
-    // private ArrayList<Ticketing> tickets = new ArrayList<Ticketing>();
+    protected String role;
+    private List<Ticketing> tickets = new ArrayList<Ticketing>();
 
-    public Employee(String email, String pass, String tickets) {
+    public Employee(int id, String email, String pass, String role) {
+        this.id = id;
         this.email = email;
         this.pass = pass;
-        this.tickets = tickets;
+        this.role = role;
     }
     
-    public Employee(){   
+    public Employee(){  
+        role = "Employee"; 
     }
 
     public boolean isNotManager() {
         return false;
     }
     
+    
+    
     @Override
     public String toString() {
-        return "Employee [email=" + email + ", password=" + pass + "tickets=" + tickets + "]";
+        return "Employee [id=" + id + ", email=" + email + ", pass=" + pass + ", role=" + role + ", tickets=" + tickets + "]";
     }
-    
+
     /**
      * @param email receoves the email from the user
      * @param pass receives the password from the user
@@ -46,33 +51,28 @@ public class Employee {
     public void setPassword(String pass) {
         this.pass = pass;
     }
-    public void setTickets(String tickets) {
-        this.tickets = tickets;
+    
+    public int getId() {
+        return id;
     }
 
-    public String getTickets() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public List<Ticketing> getTickets() {
         return tickets;
     }
 
-    public boolean equals(Employee other){
-        if(email.equals(other.email)){
-            return true;
-        } else {
-            return false;
-        }
+    public void setTickets(List<Ticketing> tickets) {
+        this.tickets = tickets;
     }
-    // public void addTicket(Ticketing tickets){
-    //     this.tickets.add(tickets);
-    // }
-
-    // public void printTickets(){
-    //     double total = 0;
-
-    //     for (Ticketing i: tickets){
-    //         total += i.getAmount();
-    //         System.out.println(i);
-    //     }
-    //     System.out.println("Your total on your ticket is $" + total);
-    // }
-
 }

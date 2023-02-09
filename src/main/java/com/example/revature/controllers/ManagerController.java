@@ -26,8 +26,8 @@ public class ManagerController implements HttpHandler{
             case "POST":
                 postRequest(exchange);
                 break;
-            case "ALTER":
-                alterRequest(exchange);
+            case "UPDATE":
+                //updateRequest(exchange);
                 break;
             default:
                 break;
@@ -63,29 +63,6 @@ public class ManagerController implements HttpHandler{
     
         ManagerService manService = new ManagerService();
         manService.saveToManBox(textBuilder.toString());
-    
-        OutputStream os = exchange.getResponseBody();
-        os.write(textBuilder.toString().getBytes());
-        os.close();
-    }
-
-    private void alterRequest(HttpExchange exchange) throws IOException{
-
-        InputStream is = exchange.getRequestBody();
-
-        StringBuilder textBuilder = new StringBuilder();
-
-        try (Reader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))){
-            int k = 0;
-
-            while ((k = reader.read()) != -1){
-                textBuilder.append((char)k);
-            }
-        }
-        exchange.sendResponseHeaders(200, textBuilder.toString().getBytes().length);
-    
-        ManagerService manService = new ManagerService();
-        manService.alterticket(textBuilder.toString());
     
         OutputStream os = exchange.getResponseBody();
         os.write(textBuilder.toString().getBytes());

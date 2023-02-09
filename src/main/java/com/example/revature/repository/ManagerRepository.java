@@ -55,14 +55,15 @@ public class ManagerRepository {
         // }
 
         // -------------- Save to database ------------
-        String sql = "insert into manager (email, pass, tickets) values (?,?,?)";
+        String sql = "insert into manager (managerId, email, pass, roles) values (?,?,?,?)";
 
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
 
-            prstmt.setString(1, man.getEmail());
-            prstmt.setString(2, man.getPassword());
-            prstmt.setString(3, man.getTickets());
+            prstmt.setInt(1, man.getId());
+            prstmt.setString(2, man.getEmail());
+            prstmt.setString(3, man.getPassword());
+            prstmt.setString(4, man.getRole());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
@@ -88,9 +89,10 @@ public class ManagerRepository {
             while (rs.next()) {
                 Manager newManager = new Manager();
 
-                newManager.setEmail(rs.getString(1));
-                newManager.setPassword(rs.getString(2));
-                newManager.setTickets(rs.getString(3));
+                newManager.setId(rs.getInt(1));
+                newManager.setEmail(rs.getString(2));
+                newManager.setPassword(rs.getString(3));
+                newManager.setRole(rs.getString(4));
 
                 listOfManager.add(newManager);
             }
@@ -102,28 +104,33 @@ public class ManagerRepository {
 
         return listOfManager;
     }
-
-    public void update(Manager to){
-        String sql = "update employee set '?' = '?' where '?' = '?'";
-
+    public Manager loginManager(Manager man) {
+        String sql = "select * from manager where email = ?";
+        Manager Current = new Manager();
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
-
-            // prstmt.setString(1, to.getEmail());
-            // prstmt.setString(2, to.getPassword());
-            // prstmt.setString(3, to.getTickets());
-
-            prstmt.setString(1, to.getTickets());
-            prstmt.setString(1, to.getTickets());
-
-            // excute is updating'
-            // excutequery expect something to result after excuting the statement
-
-            prstmt.executeUpdate();
+            prstmt.setString(1, man.getEmail());
+            ResultSet rs = prstmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("Employee does not exist!");
+                return null;
+            }   // check if the password is correct
+            else if (man.getPassword().equals(rs.getString(2))) {
+                Current.setId(rs.getInt("Id"));
+                Current.setEmail(rs.getString("email"));
+                Current.setPassword(rs.getString("Password"));
+                Current.setRole(rs.getString("Role"));
+            } else {
+                System.out.println("Wrong Password!");
+                return null;
+            }
+            rs.close();
+            prstmt.close();
         } catch (Exception e) {
-            //TODO: handle exception
             e.printStackTrace();
         }
+        return Current;
     }
+    
 }
 
