@@ -55,7 +55,7 @@ public class TicketingRepository {
         // }
 
         // -------------- Save to database ------------
-        String sql = "insert into ticketing (ticketID, email, pass, amount, description, status) values (?,?,?,?,?,?)";
+        String sql = "insert into ticketing (ticketID, email, pass, amount, description, status) values (?,?,?,?,?,'PENDING')";
 
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
@@ -65,7 +65,7 @@ public class TicketingRepository {
             prstmt.setString(3, tick.getPassword());
             prstmt.setDouble(4, tick.getAmount());
             prstmt.setString(5, tick.getDescription());
-            prstmt.setString(6, tick.getStatus());
+            //prstmt.setString(6, tick.getStatus());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
