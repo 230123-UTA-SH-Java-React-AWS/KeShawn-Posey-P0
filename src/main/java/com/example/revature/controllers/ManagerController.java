@@ -8,6 +8,10 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import com.example.revature.model.Manager;
 import com.example.revature.service.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -21,6 +25,7 @@ public class ManagerController implements HttpHandler{
 
         switch (verb){
             case "GET":
+                //login for manager and sees employees
                 getRequest(exchange);
                 break;
             case "POST":
@@ -28,6 +33,9 @@ public class ManagerController implements HttpHandler{
                 break;
             case "UPDATE":
                 //updateRequest(exchange);
+                break;
+            case "PUT":
+                getEmployeeRequest(exchange);
                 break;
             default:
                 break;
@@ -37,15 +45,32 @@ public class ManagerController implements HttpHandler{
 
     private void getRequest(HttpExchange exchange) throws IOException {
         ManagerService serv = new ManagerService();
-        String jsonCurrentList = serv.getAllManager();
-
-        exchange.sendResponseHeaders(200, jsonCurrentList.getBytes().length);
-
+        ObjectMapper mapper = new ObjectMapper();
+        String response = "";
+        InputStream is = exchange.getRequestBody();
+        StringBuilder textBuilder = new StringBuilder();
         OutputStream os = exchange.getResponseBody();
-        os.write(jsonCurrentList.getBytes());
+        try (Reader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            int c = 0;
+            while ((c = reader.read()) != -1) {
+                textBuilder.append((char)c);
+            }
+        } 
+        Manager userInfo = mapper.readValue(textBuilder.toString(), Manager.class);
+        Manager currentUser = serv.getCurrentManager(userInfo);
+        if (currentUser == null) {
+            response = "Incorrect Email or Password";
+            exchange.sendResponseHeaders(404, response.getBytes().length);
+            os.write(response.getBytes());
+        }
+        else if (currentUser != null) {
+            response = mapper.writeValueAsString(currentUser);
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+            os.write(response.getBytes());
+        }
         os.close();
     }
-
+    //signup
     private void postRequest(HttpExchange exchange) throws IOException{
 
         InputStream is = exchange.getRequestBody();
@@ -66,6 +91,16 @@ public class ManagerController implements HttpHandler{
     
         OutputStream os = exchange.getResponseBody();
         os.write(textBuilder.toString().getBytes());
+        os.close();
+    }
+
+    //gets employee request
+    private void getEmployeeRequest(HttpExchange exchange) throws IOException {
+        ManagerService serv = new ManagerService();
+        String jsonCurrentList = serv.getAllForManager();
+        exchange.sendResponseHeaders(200, jsonCurrentList.getBytes().length);
+        OutputStream os = exchange.getResponseBody();
+        os.write(jsonCurrentList.getBytes());
         os.close();
     }
 

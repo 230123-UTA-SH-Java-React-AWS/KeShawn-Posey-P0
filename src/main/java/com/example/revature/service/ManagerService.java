@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class ManagerService {
+    //saves the manager
     public void saveToManBox(String ManJson) {
         
         ManagerRepository repo = new ManagerRepository();
@@ -35,9 +36,9 @@ public class ManagerService {
         }
     }
 
-    public String getAllManager(){
+    public String getAllForManager(){
         ManagerRepository repo = new ManagerRepository();
-        List<Manager> listOfManagers = repo.getAllManager();
+        List<Manager> listOfManagers = repo.getAllForManager();
 
         ObjectMapper map = new ObjectMapper();
 
@@ -60,7 +61,7 @@ public class ManagerService {
         return jsonString;
  
     }
-    
+    //follows manager
     public Manager getCurrentManager(Manager current) {
         ManagerRepository repo = new ManagerRepository();
         Manager currentManager = repo.loginManager(current);

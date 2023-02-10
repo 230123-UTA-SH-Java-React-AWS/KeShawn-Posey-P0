@@ -23,6 +23,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class ManagerRepository {
     
+    //signup manager inside of database
+
     public void Save(Manager man) {
 
         // -------------- Save to json file ----------------
@@ -75,8 +77,9 @@ public class ManagerRepository {
         }
     }
 
-    public List<Manager> getAllManager() {
-        String sql = "select * from Manager";
+    //Get all pending tickets for manager
+    public List<Manager> getAllForManager() {
+        String sql = "select * from ticketing where status = 'PENDING'";
         List<Manager> listOfManager = new ArrayList<Manager>();
 
         try (Connection con = ConnectionUtil.getConnection()) {
@@ -85,7 +88,6 @@ public class ManagerRepository {
 
             ResultSet rs = stmt.executeQuery(sql);
 
-            // Mapping information from a table to a DS instead
             while (rs.next()) {
                 Manager newManager = new Manager();
 
@@ -104,6 +106,7 @@ public class ManagerRepository {
 
         return listOfManager;
     }
+    //Need to fix the columns
     public Manager loginManager(Manager man) {
         String sql = "select * from manager where email = ?";
         Manager Current = new Manager();
@@ -114,8 +117,8 @@ public class ManagerRepository {
             if (!rs.next()) {
                 System.out.println("Employee does not exist!");
                 return null;
-            }   // check if the password is correct
-            else if (man.getPassword().equals(rs.getString(2))) {
+            }  
+            else if (man.getPassword().equals(rs.getString(3))) {
                 Current.setId(rs.getInt("Id"));
                 Current.setEmail(rs.getString("email"));
                 Current.setPassword(rs.getString("Password"));

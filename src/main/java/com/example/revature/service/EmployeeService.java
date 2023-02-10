@@ -13,6 +13,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class EmployeeService {
+    //saves the employee
     public void saveToEmployBox(String employJson) {
         
         EmployeeRepository repo = new EmployeeRepository();
@@ -61,11 +62,13 @@ public class EmployeeService {
         return jsonString;
  
     }
+    //follows employee
     public Employee getCurrentEmployee (Employee current) {
         EmployeeRepository repo = new EmployeeRepository();
         Employee currentEmployee = repo.loginEmployee(current);
         return currentEmployee;
     }
+    //filters the tickets by status
 
     public List<Ticketing> filterTickets (String userEmail, String filter){
         EmployeeRepository repo = new EmployeeRepository();

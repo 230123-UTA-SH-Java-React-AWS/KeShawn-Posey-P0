@@ -37,7 +37,6 @@ public class TicketingController implements HttpHandler {
                 putRequest(exchange);
                 break;
             default:
-                notHTTP(exchange);
                 break;
         }
     }
@@ -76,17 +75,15 @@ public class TicketingController implements HttpHandler {
         os.close();
     }
 
-
-    private void putRequest(HttpExchange exchange) throws IOException{
-        TicketingService serv = new TicketingService();
+    private void putRequest(HttpExchange exchange) throws IOException {
+        TicketingService service = new TicketingService();
         String manEmail;
         String manPassword;
-        String ticketID;
+        int ticketID;
         String status;
         String response = "";
         JsonNode jsonDoc;
-        Ticketing processTickets = new Ticketing();
-        //Ticketing processTickets = new Ticketing();
+        Ticketing processTicket = new Ticketing();
         InputStream is = exchange.getRequestBody();
         StringBuilder textBuilder = new StringBuilder();
         ObjectMapper mapper = new ObjectMapper();
@@ -102,22 +99,13 @@ public class TicketingController implements HttpHandler {
         manEmail = manEmail.replace("\"", "");
         manPassword = (jsonDoc.get("password").toString());
         manPassword = manPassword.replace("\"", "");
-        ticketID = (jsonDoc.get("ticketID").toString());
-        ticketID = ticketID.replace("\"", "");
+        ticketID = (jsonDoc.get("ticketId").asInt());
         status = (jsonDoc.get("status").toString());
         status = status.replace("\"", "");
-        processTickets = serv.updateTickets(manEmail, manPassword, ticketID, status);
-        response = mapper.writeValueAsString(processTickets);
+        processTicket = service.updateTickets(manEmail, manPassword, ticketID, status);
+        response = mapper.writeValueAsString(processTicket);
         exchange.sendResponseHeaders(200, response.getBytes().length);
         os.write(response.getBytes());
-        os.close();
-    }
-
-    private void notHTTP(HttpExchange exchange) throws IOException {
-        String noResponse = "HTTP Not Supported";
-        exchange.sendResponseHeaders(404, noResponse.getBytes().length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(noResponse.getBytes());
         os.close();
     }
 

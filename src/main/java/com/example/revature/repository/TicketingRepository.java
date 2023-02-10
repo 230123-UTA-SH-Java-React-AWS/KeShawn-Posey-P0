@@ -21,6 +21,8 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class TicketingRepository {
+    //create ticket by employee inside of database
+
     public void Save(Ticketing tick) {
 
         // -------------- Save to json file ----------------
@@ -60,10 +62,10 @@ public class TicketingRepository {
 
             prstmt.setInt(1, tick.getTicketId());
             prstmt.setString(2, tick.getEmail());
-            //prstmt.setString(3, tick.getPassword());
-            prstmt.setDouble(3, tick.getAmount());
-            prstmt.setString(4, tick.getDescription());
-            prstmt.setString(5, tick.getStatus());
+            prstmt.setString(3, tick.getPassword());
+            prstmt.setDouble(4, tick.getAmount());
+            prstmt.setString(5, tick.getDescription());
+            prstmt.setString(6, tick.getStatus());
 
             // excute is updating'
             // excutequery expect something to result after excuting the statement
@@ -75,6 +77,7 @@ public class TicketingRepository {
         }
     }
 
+    //manager can check to see pending tickets
     public List<Ticketing> getAllTicketing() {
         String sql = "select * from ticketing where status = 'PENDING'";
         List<Ticketing> listOfTicketing = new ArrayList<Ticketing>();
@@ -85,7 +88,6 @@ public class TicketingRepository {
 
             ResultSet rs = stmt.executeQuery(sql);
 
-            // Mapping information from a table to a DS instead
             while (rs.next()) {
                 Ticketing newTicketing = new Ticketing();
 
@@ -106,13 +108,14 @@ public class TicketingRepository {
         return listOfTicketing;
     }
 
-    public Ticketing processTickets(String ticketID, String status){
+    //manager can process ticket
+    public Ticketing processTickets(int ticketID, String status){
         Ticketing processedTicket = new Ticketing();
         String sql = "update ticketing set status = ? where ticketID = ?";
             try (Connection con = ConnectionUtil.getConnection()) {
                 PreparedStatement prstmt = con.prepareStatement(sql);
                 prstmt.setString(1, status);
-                prstmt.setString(2, ticketID);
+                prstmt.setInt(2, ticketID);
                 ResultSet rs = prstmt.executeQuery();
                 rs.close();
                 prstmt.close();
@@ -123,9 +126,10 @@ public class TicketingRepository {
         return processedTicket;
     }
 
+    //valid that the manager can update the status
     public boolean validateManager(String manEmail, String manPassword) {
         boolean isManager = false;
-        String sql = "select * from employee where email = ?";
+        String sql = "select * from manager where email = ?";
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
             prstmt.setString(1, manEmail);
@@ -133,7 +137,7 @@ public class TicketingRepository {
             if (!rs.next()) {
                 isManager = false;
             }
-            else if (manPassword.equals(rs.getString(2))) {
+            else if (manPassword.equals(rs.getString(3))) {
                 isManager = true;
             }
             rs.close();
@@ -143,13 +147,13 @@ public class TicketingRepository {
         }
         return isManager;
     }
-
-    private Ticketing findTicket(String ticketID) {
+    //finding tickets by id
+    private Ticketing findTicket(int ticketID) {
         Ticketing Ticket = new Ticketing();
-        String sql = "select * from ticketing where ticketID = ?";
+        String sql = "select * from ticketing where ticketid = ?";
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
-            prstmt.setString(1, ticketID);
+            prstmt.setInt(1, ticketID);
             ResultSet rs = prstmt.executeQuery();
             if (!rs.next()) {
                 return null;
@@ -167,16 +171,4 @@ public class TicketingRepository {
         }
         return Ticket;
     }
-
-    // private boolean isProcessed(String ticketID){
-    //     boolean ticketIsProcessed = false;
-    //     Ticketing Ticket = findTicket(ticketID);
-    //     if (Ticket.isProcessed() == false) {
-    //         ticketIsProcessed = false;
-    //     } else {
-    //         ticketIsProcessed = true;
-    //         System.out.println("Ticket has already been processed");
-    //     }
-    //     return ticketIsProcessed;
-    // }
 }

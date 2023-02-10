@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class TicketingService {
+    //saves the tickets
     public void saveToTickBox(String TickJson) {
         
         TicketingRepository repo = new TicketingRepository();
@@ -60,11 +61,12 @@ public class TicketingService {
         return jsonString;
  
     }
-    public Ticketing updateTickets(String manEmail, String manPassword, String ticketID, String status){
+    // Check that manager exist and their password
+    public Ticketing updateTickets(String manEmail, String manPassword, int ticketID, String status){
         TicketingRepository repo = new TicketingRepository();
         Ticketing processedTicket = new Ticketing();
         boolean manValidation = repo.validateManager(manEmail,manPassword);
-        if (manValidation == true) {    // Check if Manager exist and password is correct
+        if (manValidation == true) {   
             processedTicket = repo.processTickets(ticketID, status);
             System.out.println("Ticket Processed");
         } else {

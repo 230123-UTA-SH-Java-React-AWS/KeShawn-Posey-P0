@@ -23,6 +23,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class EmployeeRepository {
 
+    //signup employee inside of database
+
     public void Save(Employee employ) {
 
         // -------------- Save to json file ----------------
@@ -75,6 +77,7 @@ public class EmployeeRepository {
         }
     }
 
+    //get all employees
     public List<Employee> getAllEmployee() {
         String sql = "select * from employee";
         List<Employee> listOfEmployee = new ArrayList<Employee>();
@@ -84,8 +87,7 @@ public class EmployeeRepository {
             Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery(sql);
-
-            // Mapping information from a table to a DS instead
+            
             while (rs.next()) {
                 Employee newEmployee = new Employee();
 
@@ -104,9 +106,8 @@ public class EmployeeRepository {
 
         return listOfEmployee;
     }
-
-    public List<Ticketing> getTickets (String email)
-    {
+    //recieve tickets to deploy in employee login
+    public List<Ticketing> getTickets (String email) {
         String sql = "select * from ticketing where email = ?";
         List<Ticketing> allTickets = new ArrayList<Ticketing>();
         try (Connection con = ConnectionUtil.getConnection()) {
@@ -128,7 +129,7 @@ public class EmployeeRepository {
         }
         return allTickets;
     }
-
+    //Filters tickets for employee
     public List<Ticketing> getFilterTickets (String email, String filter) {
         String sql = "select * from ticketing where email = ? and status = ?";
         List<Ticketing> allTickets = new ArrayList<Ticketing>();
@@ -152,9 +153,10 @@ public class EmployeeRepository {
         }
         return allTickets;
     }
+    //login to check if employee is real
     public Employee loginEmployee(Employee employee) {
         String sql = "select * from employee where email = ?";
-        Employee Current = new Employee();
+        Employee employ = new Employee();
         try (Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
             prstmt.setString(1, employee.getEmail());
@@ -164,11 +166,11 @@ public class EmployeeRepository {
                 return null;
             }   // check if the password is correct
             else if (employee.getPassword().equals(rs.getString(2))) {
-                Current.setId(rs.getInt("employeeId"));
-                Current.setEmail(rs.getString("email"));
-                Current.setPassword(rs.getString("pass"));
-                Current.setRole(rs.getString("roles"));
-                Current.setTickets(getTickets(Current.getEmail()));
+                employ.setId(rs.getInt("employeeId"));
+                employ.setEmail(rs.getString("email"));
+                employ.setPassword(rs.getString("pass"));
+                employ.setRole(rs.getString("roles"));
+                employ.setTickets(getTickets(employ.getEmail()));
             } else {
                 System.out.println("Wrong Password!");
                 return null;
@@ -178,6 +180,6 @@ public class EmployeeRepository {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Current;
+        return employ;
     }
 }

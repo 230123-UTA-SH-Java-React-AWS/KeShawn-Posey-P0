@@ -29,20 +29,22 @@ public class EmployeeController implements HttpHandler{
 
         switch (verb){
             case "GET":
+                //login for employee
                 getRequest(exchange);
                 break;
             case "POST":
+                //sign up for employee
                 postRequest(exchange);
                 break;
             case "PUT":
+                //check the status of employees tickets
                 putRequest(exchange);
                 break;
             default:
                 break;
-        }
-        
+        } 
     }
-
+    //logins the employee
     private void getRequest(HttpExchange exchange) throws IOException {
         EmployeeService serv = new EmployeeService();
         String jsonCurrentList = serv.getAllEmployee();
@@ -53,7 +55,7 @@ public class EmployeeController implements HttpHandler{
         os.write(jsonCurrentList.getBytes());
         os.close();
     }
-
+    //signup the employee
     private void postRequest(HttpExchange exchange) throws IOException{
 
         InputStream is = exchange.getRequestBody();
@@ -77,6 +79,7 @@ public class EmployeeController implements HttpHandler{
         os.close();
     }
 
+    //filters the tickets by status for employee and replaces the input to search for the ticket in question
     private void putRequest(HttpExchange exchange) throws IOException {
 
         EmployeeService serv = new EmployeeService();
